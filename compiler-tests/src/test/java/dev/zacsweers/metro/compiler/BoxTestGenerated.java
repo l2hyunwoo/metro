@@ -737,9 +737,57 @@ public class BoxTestGenerated extends AbstractBoxTest {
       }
 
       @Test
+      @TestMetadata("AssistedFactoryWithAGenericMethodWorks.kt")
+      public void testAssistedFactoryWithAGenericMethodWorks() {
+        runTest("compiler-tests/src/test/data/box/inject/assisted/AssistedFactoryWithAGenericMethodWorks.kt");
+      }
+
+      @Test
+      @TestMetadata("AssistedFactoryWithAProtectedMethodWorks.kt")
+      public void testAssistedFactoryWithAProtectedMethodWorks() {
+        runTest("compiler-tests/src/test/data/box/inject/assisted/AssistedFactoryWithAProtectedMethodWorks.kt");
+      }
+
+      @Test
+      @TestMetadata("AssistedFactoryWithAdditionalNonAbstractMethods.kt")
+      public void testAssistedFactoryWithAdditionalNonAbstractMethods() {
+        runTest("compiler-tests/src/test/data/box/inject/assisted/AssistedFactoryWithAdditionalNonAbstractMethods.kt");
+      }
+
+      @Test
+      @TestMetadata("AssistedParametersInLaterOrderWork.kt")
+      public void testAssistedParametersInLaterOrderWork() {
+        runTest("compiler-tests/src/test/data/box/inject/assisted/AssistedParametersInLaterOrderWork.kt");
+      }
+
+      @Test
       @TestMetadata("AssistedTypesCanBeExplicitlyProvided.kt")
       public void testAssistedTypesCanBeExplicitlyProvided() {
         runTest("compiler-tests/src/test/data/box/inject/assisted/AssistedTypesCanBeExplicitlyProvided.kt");
+      }
+
+      @Test
+      @TestMetadata("BasicAssistedInject.kt")
+      public void testBasicAssistedInject() {
+        runTest("compiler-tests/src/test/data/box/inject/assisted/BasicAssistedInject.kt");
+      }
+
+      @Test
+      @TestMetadata("DefaultAssistedFactoryIsGeneratedInFIR.kt")
+      public void testDefaultAssistedFactoryIsGeneratedInFIR() {
+        runTest("compiler-tests/src/test/data/box/inject/assisted/DefaultAssistedFactoryIsGeneratedInFIR.kt");
+      }
+
+      @Test
+      @TestMetadata("DefaultAssistedFactoryWithCustomIdentifiers.kt")
+      public void testDefaultAssistedFactoryWithCustomIdentifiers() {
+        runTest("compiler-tests/src/test/data/box/inject/assisted/DefaultAssistedFactoryWithCustomIdentifiers.kt");
+      }
+
+      @Test
+      @TestMetadata("DefaultAssistedFactoryWithDefaultValues.kt")
+      public void testDefaultAssistedFactoryWithDefaultValues() {
+        runTest("compiler-tests/src/test/data/box/inject/assisted/DefaultAssistedFactoryWithDefaultValues.kt");
       }
 
       @Test
