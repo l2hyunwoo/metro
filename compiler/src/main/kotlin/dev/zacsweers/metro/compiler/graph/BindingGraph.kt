@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 package dev.zacsweers.metro.compiler.graph
 
-import dev.zacsweers.metro.compiler.appendLineWithUnderlinedContent
 import dev.zacsweers.metro.compiler.ir.appendBindingStack
 import dev.zacsweers.metro.compiler.ir.appendBindingStackEntries
 import dev.zacsweers.metro.compiler.ir.withEntry
+import dev.zacsweers.metro.compiler.joinWithDynamicSeparatorTo
 import dev.zacsweers.metro.compiler.mapToSet
 import dev.zacsweers.metro.compiler.tracing.Tracer
 import dev.zacsweers.metro.compiler.tracing.traceNested
@@ -289,8 +289,6 @@ internal open class MutableBindingGraph<
                     roots,
                   )
                 }
-                // Reverse one more time to correct the order
-                .reversed()
             reportCycle(entriesInCycle, stack)
           },
           parentTracer = nestedTracer,
@@ -315,7 +313,24 @@ internal open class MutableBindingGraph<
           "$indent${key.render(short = true)} <--> ${key.render(short = true)} (depends on itself)"
         )
       } else {
-        fullCycle.joinTo(this, separator = " --> ", prefix = indent) {
+        val singleLine = fullCycle.size < 5
+        fullCycle.joinWithDynamicSeparatorTo(this, separator = { prev, _ ->
+          buildString {
+            if (singleLine) {
+              append(' ')
+            } else {
+              append('\n')
+              append(indent)
+            }
+            val prevBinding = bindings.getValue(prev.typeKey)
+            if (prevBinding.isAlias) {
+              append("~~>")
+            } else {
+              append("-->")
+            }
+            append(' ')
+          }
+        }, prefix = indent) {
           it.contextKey.render(short = true)
         }
       }

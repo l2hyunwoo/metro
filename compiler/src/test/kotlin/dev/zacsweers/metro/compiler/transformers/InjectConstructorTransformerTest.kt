@@ -399,7 +399,7 @@ class InjectConstructorTransformerTest : MetroCompilerTest() {
           e: ExampleGraph.kt:8:7 [Metro/MissingBinding] Cannot find an @Inject constructor or @Provides-annotated function/property for: test.ExampleClass
 
               test.ExampleClass is requested at
-                  [test.ExampleGraph] test.ExampleGraph#exampleClass
+                  [test.ExampleGraph] test.ExampleGraph.exampleClass
         """
           .trimIndent()
       )
