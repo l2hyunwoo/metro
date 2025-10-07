@@ -32,6 +32,8 @@ This release introduces new experimental support for multiple compiler and IDE v
 - **Fix**: Treat `MembersInjector` types as implicitly deferrable in binding graph validation.
 - **Fix**: Report cycles in form of `binding --> dependency` rather than the reverse for better readability.
 
+Special thanks to [@kevinguitar](https://github.com/kevinguitar), [@hossain-khan](https://github.com/hossain-khan), and [@vRallev](https://github.com/vRallev) for contributing to this release!
+
 0.6.8
 -----
 
