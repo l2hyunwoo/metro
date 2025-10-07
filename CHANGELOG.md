@@ -4,16 +4,17 @@ Changelog
 **Unreleased**
 --------------
 
-## Improved cross-version compatibility
+0.6.9
+-----
 
-This release introduces new experimental support for multiple compiler and IDE versions. The primary goal of this is to better support running Metro's FIR extensions across different IntelliJ Kotlin Plugin versions and make IDE support more robust, and general compiler compatibility falls out of that more or less for free.
+_2025-10-07_
 
-## Misc
+This release introduces new experimental support for multiple compiler and IDE versions. The primary goal of this is to better support running Metro's FIR extensions across different IntelliJ Kotlin Plugin versions and make IDE support more robust, and general compiler compatibility falls out of that more or less for free. This is experimental and only going to target _forward_ compatibility.
 
 - **New**: Report more IR errors up to a maximum. The default is `20`, but is configurable via the `maxIrErrors` Gradle DSL option. If you want to restore the previous "fail-fast" behavior, you can set this value to `1`.
 - **New**: Generate specific containing names in Kotlin 2.3.0+ when generating top-level functions for hint gen.
 - **Behavior change**: Assisted-inject types can only be directly exposed on a graph if qualified.
-- **Behavior change**: Update Gradle plugin to target Kotlin 2.0, which requires Gradle `8.11` or later.
+- **Behavior change**: Update the Gradle plugin to target Kotlin 2.0, which requires Gradle `8.11` or later.
 - **Enhancement**: Improve compatibility across 2.2.20 and 2.3.0+ releases. This release _should_ be compatible with both!
 - **Enhancement**: Add diagnostic for directly injecting unqualified assisted-injected classes rather than using their factories.
 - **Enhancement**: Add diagnostic mixing `Provider` and `Lazy` types for `Provider<Lazy<T>>` injections.
