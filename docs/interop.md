@@ -130,3 +130,5 @@ This specifically enables two features.
 2. Interop with generated Dagger factories for constructor-injected classes, assisted-injected classes, and Dagger modules. This means that an upstream class or module that was processed with the dagger compiler and has a generated Java _factory_ class can be natively reused by Metro.
 
 Note this also automatically adds an extra `interop-dagger` dependency to support this scenario.
+
+Enabling this feature also enables interop with Dagger's `@BindsOptionalOf` annotation.
