@@ -3,10 +3,14 @@
 package dev.zacsweers.metro.compiler.ir.transformers
 
 import dev.zacsweers.metro.compiler.ir.BindsCallable
+import dev.zacsweers.metro.compiler.ir.BindsOptionalOfCallable
+import dev.zacsweers.metro.compiler.ir.IrContextualTypeKey
 import dev.zacsweers.metro.compiler.ir.IrMetroContext
+import dev.zacsweers.metro.compiler.ir.IrTypeKey
 import dev.zacsweers.metro.compiler.ir.MetroSimpleFunction
 import dev.zacsweers.metro.compiler.ir.MultibindsCallable
 import dev.zacsweers.metro.compiler.ir.toBindsCallable
+import dev.zacsweers.metro.compiler.ir.toBindsOptionalOfCallable
 import dev.zacsweers.metro.compiler.ir.toMultibindsCallable
 import dev.zacsweers.metro.compiler.reportCompilerBug
 import kotlin.collections.plusAssign
@@ -21,6 +25,7 @@ import org.jetbrains.kotlin.ir.declarations.IrClass
 internal class BindsMirrorCollector(private val isInterop: Boolean) {
   private val bindsCallables = mutableSetOf<BindsCallable>()
   private val multibindsCallables = mutableSetOf<MultibindsCallable>()
+  private val optionalTypes = mutableSetOf<BindsOptionalOfCallable>()
 
   context(context: IrMetroContext)
   operator fun plusAssign(function: MetroSimpleFunction) {
@@ -28,12 +33,14 @@ internal class BindsMirrorCollector(private val isInterop: Boolean) {
       bindsCallables += function.toBindsCallable(isInterop)
     } else if (function.annotations.isMultibinds) {
       multibindsCallables += function.toMultibindsCallable(isInterop)
+    } else if (function.annotations.isBindsOptionalOf) {
+      optionalTypes += function.toBindsOptionalOfCallable()
     } else {
-      reportCompilerBug("Not a binds or multibinds")
+      reportCompilerBug("Unexpected binds declaration: $function")
     }
   }
 
   fun buildMirror(clazz: IrClass): BindsMirror {
-    return BindsMirror(clazz, bindsCallables, multibindsCallables)
+    return BindsMirror(clazz, bindsCallables, multibindsCallables, optionalTypes)
   }
 }
