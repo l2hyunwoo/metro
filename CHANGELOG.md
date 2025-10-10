@@ -4,11 +4,34 @@ Changelog
 **Unreleased**
 --------------
 
+### Optional Dependency Behaviors
+
+Graph accessors can now expose optional dependencies, just use `@OptionalDependency` on the accessor. Note that the accessor _must_ declare a default body that Metro will use if the dependency is absent.
+
+```kotlin
+@DependencyGraph
+interface AppGraph {
+  @OptionalDependency
+  val message: String
+    get() = "Absent!"
+}
+```
+
+There are a couple of optional configuration for Metro's optional dependency support that can be configured via the `optionalDependencyBehavior` Gradle DSL:
+
+- `DISABLED` - Disallows optional dependencies entirely.
+- `REQUIRE_OPTIONAL_DEPENDENCY` - Requires optional dependency _parameters_ to also be annotated with `@OptionalDependency`. This may be preferable for consistency with accessors and/or explicitness.
+- `DEFAULT` - The default behavior as described above — accessors must be annotated with `@OptionalDependency` with default bodies and parameters just use default value expressions.
+
+### Other changes
+
 - **New**: Add interop for Dagger `@BindsOptionalOf`. Note this is currently only limited to `java.util.Optional`.
 - **Enhancement**: Improve error messages for unexpected `IrErrorType` encounters.
 - **Enhancement**: Add configurable `statementsPerInitFun` to option to control the number of statements per init function. Only for advanced/debugging use.
 - **Fix**: Allow `@Includes` types themselves (i.e., not their accessors) to be dependencies in generated graphs.
 - **Fix**: Allow multiple graph extension factory accessors of the same factory type on parent graphs.
+- **Fix**: Report all missing `@Provides` body diagnostics rather than returning early.
+- **Fix**: Allow `open` members from abstract graph class superclasses to be accessors.
 
 0.6.9
 -----

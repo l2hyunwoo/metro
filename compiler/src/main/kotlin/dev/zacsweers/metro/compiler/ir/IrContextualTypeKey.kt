@@ -3,7 +3,6 @@
 package dev.zacsweers.metro.compiler.ir
 
 import dev.drewhamilton.poko.Poko
-import dev.zacsweers.metro.compiler.expectAs
 import dev.zacsweers.metro.compiler.graph.BaseContextualTypeKey
 import dev.zacsweers.metro.compiler.graph.WrappedType
 import dev.zacsweers.metro.compiler.ir.parameters.wrapInProvider
@@ -86,6 +85,7 @@ internal class IrContextualTypeKey(
       type: IrType = function.returnType,
       wrapInProvider: Boolean = false,
       patchMutableCollections: Boolean = false,
+      hasDefaultOverride: Boolean = false,
     ): IrContextualTypeKey {
       val typeToConvert =
         if (wrapInProvider) {
@@ -98,20 +98,21 @@ internal class IrContextualTypeKey(
           function.correspondingPropertySymbol?.owner?.qualifierAnnotation()
             ?: function.qualifierAnnotation()
         },
-        false,
+        hasDefaultOverride,
         patchMutableCollections,
         declaration = function,
       )
     }
 
     context(context: IrMetroContext)
-    fun from(parameter: IrValueParameter, type: IrType = parameter.type): IrContextualTypeKey =
-      type.asContextualTypeKey(
+    fun from(parameter: IrValueParameter, type: IrType = parameter.type): IrContextualTypeKey {
+      return type.asContextualTypeKey(
         qualifierAnnotation = with(context) { parameter.qualifierAnnotation() },
-        hasDefault = parameter.defaultValue != null,
+        hasDefault = parameter.hasMetroDefault(),
         patchMutableCollections = false,
         declaration = parameter,
       )
+    }
 
     fun create(
       typeKey: IrTypeKey,
@@ -158,8 +159,8 @@ internal class IrContextualTypeKey(
     }
 
     /** Left for backward compat */
-    operator fun invoke(typeKey: IrTypeKey): IrContextualTypeKey {
-      return create(typeKey)
+    operator fun invoke(typeKey: IrTypeKey, hasDefault: Boolean = false): IrContextualTypeKey {
+      return create(typeKey, hasDefault = hasDefault)
     }
   }
 }

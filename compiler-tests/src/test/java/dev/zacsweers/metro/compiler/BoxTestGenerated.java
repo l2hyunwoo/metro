@@ -484,6 +484,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
 
     @Test
+    @TestMetadata("OpenAccessorsInClasses.kt")
+    public void testOpenAccessorsInClasses() {
+      runTest("compiler-tests/src/test/data/box/dependencygraph/OpenAccessorsInClasses.kt");
+    }
+
+    @Test
     @TestMetadata("OverrideCompatibleAccessorsFromContributedInterface.kt")
     public void testOverrideCompatibleAccessorsFromContributedInterface() {
       runTest("compiler-tests/src/test/data/box/dependencygraph/OverrideCompatibleAccessorsFromContributedInterface.kt");
@@ -708,6 +714,34 @@ public class BoxTestGenerated extends AbstractBoxTest {
       @TestMetadata("UnusedProvidersInContainersAreNotValidated.kt")
       public void testUnusedProvidersInContainersAreNotValidated() {
         runTest("compiler-tests/src/test/data/box/dependencygraph/leniency/UnusedProvidersInContainersAreNotValidated.kt");
+      }
+    }
+
+    @Nested
+    @TestMetadata("compiler-tests/src/test/data/box/dependencygraph/optional")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Optional {
+      @Test
+      public void testAllFilesPresentInOptional() {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler-tests/src/test/data/box/dependencygraph/optional"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+      }
+
+      @Test
+      @TestMetadata("DefaultWorksWithoutAnnotation.kt")
+      public void testDefaultWorksWithoutAnnotation() {
+        runTest("compiler-tests/src/test/data/box/dependencygraph/optional/DefaultWorksWithoutAnnotation.kt");
+      }
+
+      @Test
+      @TestMetadata("OptionalAccessors.kt")
+      public void testOptionalAccessors() {
+        runTest("compiler-tests/src/test/data/box/dependencygraph/optional/OptionalAccessors.kt");
+      }
+
+      @Test
+      @TestMetadata("RequiredAnnotationWorksWhenPresent.kt")
+      public void testRequiredAnnotationWorksWhenPresent() {
+        runTest("compiler-tests/src/test/data/box/dependencygraph/optional/RequiredAnnotationWorksWhenPresent.kt");
       }
     }
   }
