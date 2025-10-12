@@ -4,6 +4,11 @@ Changelog
 **Unreleased**
 --------------
 
+0.6.10
+-----
+
+_2025-10-11_
+
 ### Optional Dependency Behaviors
 
 Graph accessors can now expose optional dependencies, just use `@OptionalDependency` on the accessor. Note that the accessor _must_ declare a default body that Metro will use if the dependency is absent.
@@ -35,6 +40,8 @@ There are a couple of optional configuration for Metro's optional dependency sup
 - **Fix**: When detecting default function/property getter bodies in graph accessors, check for `open` modality as well.
 - **Fix**: Don't duplicate includes accessor keys across multiple parent context levels.
 - **Fix**: Fix not respecting ref counting when allocating provider fields for constructor-injected class providers. This should reduce generated graph code size quite a bit.
+
+Special thanks to [@ChristianKatzmann](https://github.com/ChristianKatzmann) for contributing to this release!
 
 0.6.9
 -----
