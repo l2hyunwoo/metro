@@ -186,6 +186,18 @@ public class DiagnosticTestGenerated extends AbstractDiagnosticTest {
     }
 
     @Test
+    @TestMetadata("AssistedTypesCannotBeDirectlyQualified.kt")
+    public void testAssistedTypesCannotBeDirectlyQualified() {
+      runTest("compiler-tests/src/test/data/diagnostic/dependencygraph/AssistedTypesCannotBeDirectlyQualified.kt");
+    }
+
+    @Test
+    @TestMetadata("AssistedTypesCannotBeProvidedWithoutQualifiers.kt")
+    public void testAssistedTypesCannotBeProvidedWithoutQualifiers() {
+      runTest("compiler-tests/src/test/data/diagnostic/dependencygraph/AssistedTypesCannotBeProvidedWithoutQualifiers.kt");
+    }
+
+    @Test
     @TestMetadata("ConfigurableMaxIrErrors.kt")
     public void testConfigurableMaxIrErrors() {
       runTest("compiler-tests/src/test/data/diagnostic/dependencygraph/ConfigurableMaxIrErrors.kt");
@@ -480,12 +492,6 @@ public class DiagnosticTestGenerated extends AbstractDiagnosticTest {
       @TestMetadata("AssistedFactoryWithMultipleSAMs.kt")
       public void testAssistedFactoryWithMultipleSAMs() {
         runTest("compiler-tests/src/test/data/diagnostic/inject/assisted/AssistedFactoryWithMultipleSAMs.kt");
-      }
-
-      @Test
-      @TestMetadata("AssistedInjectMigrationsErrors.kt")
-      public void testAssistedInjectMigrationsErrors() {
-        runTest("compiler-tests/src/test/data/diagnostic/inject/assisted/AssistedInjectMigrationsErrors.kt");
       }
 
       @Test

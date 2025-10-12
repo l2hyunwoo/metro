@@ -10,9 +10,11 @@ import dev.zacsweers.metro.compiler.fir.MetroDiagnostics.ASSISTED_INJECTION_WARN
 import dev.zacsweers.metro.compiler.fir.annotationsIn
 import dev.zacsweers.metro.compiler.fir.checkers.AssistedInjectChecker.FirAssistedParameterKey.Companion.toAssistedParameterKey
 import dev.zacsweers.metro.compiler.fir.classIds
+import dev.zacsweers.metro.compiler.fir.findAssistedInjectConstructors
 import dev.zacsweers.metro.compiler.fir.findInjectLikeConstructors
 import dev.zacsweers.metro.compiler.fir.isAnnotatedWithAny
 import dev.zacsweers.metro.compiler.fir.metroFirBuiltIns
+import dev.zacsweers.metro.compiler.fir.qualifierAnnotation
 import dev.zacsweers.metro.compiler.fir.singleAbstractFunction
 import dev.zacsweers.metro.compiler.fir.validateApiDeclaration
 import dev.zacsweers.metro.compiler.mapToSetWithDupes
@@ -54,9 +56,20 @@ internal object AssistedInjectChecker : FirClassChecker(MppCheckerKind.Common) {
 
     if (isAssistedFactory) {
       checkAssistedFactory(declaration, source, session, classIds)
-    } else {
-      // Check if this class has an @Inject constructor with @Assisted parameters
-      checkAssistedInjectedClass(declaration, source, session, classIds)
+      return
+    }
+
+    val isAssistedInject =
+      declaration.symbol.findAssistedInjectConstructors(session, checkClass = true).isNotEmpty()
+    if (isAssistedInject) {
+      val qualifier = declaration.symbol.qualifierAnnotation(session)
+      if (qualifier != null) {
+        reporter.reportOn(
+          source,
+          ASSISTED_INJECTION_ERROR,
+          "@AssistedInject-annotated classes cannot be annotated with qualifier annotations.",
+        )
+      }
     }
   }
 
@@ -93,10 +106,10 @@ internal object AssistedInjectChecker : FirClassChecker(MppCheckerKind.Common) {
       return
     }
 
-    // Ensure target type has an inject constructor
+    // Ensure target type has an assisted inject constructor
     val targetType = function.resolvedReturnTypeRef.firClassLike(session) as? FirClass? ?: return
     val injectConstructor =
-      targetType.symbol.findInjectLikeConstructors(session, checkClass = true).firstOrNull()
+      targetType.symbol.findAssistedInjectConstructors(session, checkClass = true).firstOrNull()
     if (injectConstructor == null) {
       reporter.reportOn(
         function.resolvedReturnTypeRef.source ?: function.source ?: source,
@@ -200,54 +213,6 @@ internal object AssistedInjectChecker : FirClassChecker(MppCheckerKind.Common) {
       )
       return
     }
-  }
-
-  context(context: CheckerContext, reporter: DiagnosticReporter)
-  private fun checkAssistedInjectedClass(
-    declaration: FirClass,
-    source: KtSourceElement,
-    session: FirSession,
-    classIds: ClassIds,
-  ) {
-    val severity = session.metroFirBuiltIns.options.assistedInjectMigrationSeverity
-    if (severity == MetroOptions.DiagnosticSeverity.NONE) {
-      return
-    }
-
-    // Check if this class has an @Inject constructor with @Assisted parameters
-    val injectConstructor =
-      declaration.symbol.findInjectLikeConstructors(session).singleOrNull() ?: return
-
-    // If it's already @AssistedInject, nothing else to do
-    if (
-      injectConstructor.annotation.toAnnotationClass(session)?.classId in
-        session.metroFirBuiltIns.classIds.assistedInjectAnnotations
-    ) {
-      return
-    }
-
-    // Check the fallback way - @Assisted params or nested `@AssistedFactory` classes
-    val isAssisted =
-      injectConstructor.constructor?.valueParameterSymbols.orEmpty().any {
-        it.isAnnotatedWithAny(session, classIds.assistedAnnotations)
-      } || findAssistedFactories(declaration, session, classIds).isNotEmpty()
-
-    // If no assisted parameters, this is not assisted injection
-    if (!isAssisted) return
-
-    // It's assisted but using `@Inject`
-    val message =
-      "Migrate to `@AssistedInject` to for assisted injection. This functionality will no longer work in a future release."
-    val factory =
-      when (severity) {
-        MetroOptions.DiagnosticSeverity.NONE -> {
-          // Covered above
-          return
-        }
-        MetroOptions.DiagnosticSeverity.WARN -> ASSISTED_INJECTION_WARNING
-        MetroOptions.DiagnosticSeverity.ERROR -> ASSISTED_INJECTION_ERROR
-      }
-    reporter.reportOn(source, factory, message)
   }
 
   private fun findAssistedFactories(
