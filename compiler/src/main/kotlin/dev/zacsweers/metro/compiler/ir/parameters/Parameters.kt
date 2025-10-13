@@ -51,6 +51,7 @@ internal class Parameters(
   val nonDispatchParameters: List<Parameter> by unsafeLazy {
     buildList {
       extensionReceiverParameter?.let(::add)
+      addAll(contextParameters)
       addAll(regularParameters)
     }
   }
@@ -65,6 +66,12 @@ internal class Parameters(
     }
   }
 
+  val parametersMap by unsafeLazy {
+    allParameters.associateBy { it.name }
+  }
+
+  operator fun get(name: Name): Parameter? = parametersMap[name]
+
   fun withCallableId(callableId: CallableId): Parameters {
     return Parameters(
       callableId,
@@ -78,10 +85,10 @@ internal class Parameters(
 
   fun overlayQualifiers(qualifiers: List<IrAnnotation?>): Parameters {
     return Parameters(
-      callableId,
-      dispatchReceiverParameter,
-      extensionReceiverParameter,
-      regularParameters.mapIndexed { i, param ->
+      callableId = callableId,
+      dispatchReceiverParameter = dispatchReceiverParameter,
+      extensionReceiverParameter = extensionReceiverParameter,
+      regularParameters = regularParameters.mapIndexed { i, param ->
         val qualifier = qualifiers[i] ?: return@mapIndexed param
         param.copy(
           contextualTypeKey =
@@ -90,8 +97,8 @@ internal class Parameters(
             )
         )
       },
-      contextParameters,
-      ir,
+      contextParameters = contextParameters,
+      ir = ir,
     )
   }
 

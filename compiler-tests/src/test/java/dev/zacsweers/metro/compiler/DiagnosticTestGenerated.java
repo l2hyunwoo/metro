@@ -346,12 +346,6 @@ public class DiagnosticTestGenerated extends AbstractDiagnosticTest {
     }
 
     @Test
-    @TestMetadata("CannotHaveContextParams.kt")
-    public void testCannotHaveContextParams() {
-      runTest("compiler-tests/src/test/data/diagnostic/functioninject/CannotHaveContextParams.kt");
-    }
-
-    @Test
     @TestMetadata("CannotHaveExtensionReceivers.kt")
     public void testCannotHaveExtensionReceivers() {
       runTest("compiler-tests/src/test/data/diagnostic/functioninject/CannotHaveExtensionReceivers.kt");
@@ -361,6 +355,12 @@ public class DiagnosticTestGenerated extends AbstractDiagnosticTest {
     @TestMetadata("CannotHaveTypeArgs.kt")
     public void testCannotHaveTypeArgs() {
       runTest("compiler-tests/src/test/data/diagnostic/functioninject/CannotHaveTypeArgs.kt");
+    }
+
+    @Test
+    @TestMetadata("ContextParamsCannotBeOptional.kt")
+    public void testContextParamsCannotBeOptional() {
+      runTest("compiler-tests/src/test/data/diagnostic/functioninject/ContextParamsCannotBeOptional.kt");
     }
   }
 
