@@ -33,6 +33,8 @@ class AppTest {
 
 This is particularly useful for tests. See their docs for more information: [Dynamic Graphs](https://zacsweers.github.io/metro/latest/dependency-graphs/#dynamic-graphs).
 
+This API is experimental and may change in the future, please report any issues you encounter!
+
 ### Other Changes
 
 - **Behavior change**: Remove `assistedInjectMigrationSeverity` DSL. You must now move fully to using `@AssistedInject` annotations for assisted types.
