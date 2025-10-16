@@ -47,6 +47,7 @@ This is particularly useful for tests. See their docs for more information: [Dyn
 - **New**: Support context parameters on top-level injected functions. See the [docs](https://zacsweers.github.io/metro/latest/injection-types/#context-parameters) for more information.
 - **New**: Improve diagnostic checks around binding container arguments to annotations and graph creators.
 - **Enhancement**: Add diagnostic for providing a constructor-injected class with a different scope than the class (if the class has a scope).
+- **Enhancement**: Allow replacing/excluding binding containers by `@Origin` annotations.
 - **Fix**: Don't use interoped annotation arguments at matching indices if their name does not match the requested name.
 - **Fix**: Trace all member injection dependencies from supertypes in graph reachability computation.
 - **Fix**: Use compat `getContainingClassSymbol()` (fixes Kotlin 2.3.0-x compatibility).
@@ -58,6 +59,8 @@ This is particularly useful for tests. See their docs for more information: [Dyn
 - **Fix**: Don't allow binding containers to be local classes.
 - **Fix**: Don't allow binding containers to be anonymous objects.
 - **Fix**: Fix wrong parent graph name in `IncompatiblyScopedBindings` hint.
+- **Fix**: Fix replacements for regular contributed types not getting processed in graph extensions.
+- **Fix**: Don't re-process contribution merging for generated graph extension impls during graph node creation.
 - Change the warning key for redundant provides to more specific `REDUNDANT_PROVIDES`.
 
 0.6.10

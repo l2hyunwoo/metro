@@ -80,6 +80,18 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
 
     @Test
+    @TestMetadata("ExcludeBindingContainerWithOrigin.kt")
+    public void testExcludeBindingContainerWithOrigin() {
+      runTest("compiler-tests/src/test/data/box/aggregation/ExcludeBindingContainerWithOrigin.kt");
+    }
+
+    @Test
+    @TestMetadata("ExcludeBindingContainerWithOriginInExtension.kt")
+    public void testExcludeBindingContainerWithOriginInExtension() {
+      runTest("compiler-tests/src/test/data/box/aggregation/ExcludeBindingContainerWithOriginInExtension.kt");
+    }
+
+    @Test
     @TestMetadata("ExcludesWithOrigin.kt")
     public void testExcludesWithOrigin() {
       runTest("compiler-tests/src/test/data/box/aggregation/ExcludesWithOrigin.kt");
@@ -137,6 +149,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
     @TestMetadata("ReplacementsWithOriginInExtension.kt")
     public void testReplacementsWithOriginInExtension() {
       runTest("compiler-tests/src/test/data/box/aggregation/ReplacementsWithOriginInExtension.kt");
+    }
+
+    @Test
+    @TestMetadata("ReplacementsWorkInGraphExtensions.kt")
+    public void testReplacementsWorkInGraphExtensions() {
+      runTest("compiler-tests/src/test/data/box/aggregation/ReplacementsWorkInGraphExtensions.kt");
     }
 
     @Test
