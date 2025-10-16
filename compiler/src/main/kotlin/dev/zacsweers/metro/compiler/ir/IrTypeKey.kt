@@ -13,7 +13,6 @@ import org.jetbrains.kotlin.ir.util.TypeRemapper
 import org.jetbrains.kotlin.ir.util.classId
 import org.jetbrains.kotlin.ir.util.defaultType
 
-// TODO cache these in DependencyGraphTransformer or shared transformer data
 @Poko
 internal class IrTypeKey
 private constructor(override val type: IrType, override val qualifier: IrAnnotation?) :
