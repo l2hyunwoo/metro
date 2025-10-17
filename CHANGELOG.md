@@ -86,6 +86,8 @@ class TacoImpl(...) : Taco
 - **Fix**: Don't reserve provider fields for custom wrapper types like interoped `Optional` types, avoiding accidental eager initialization in cycles.
 - Change the warning key for redundant provides to more specific `REDUNDANT_PROVIDES`.
 
+Special thanks to [@erawhctim](https://github.com/erawhctim) and [@CharlieTap](https://github.com/CharlieTap) for contributing to this release!
+
 0.6.10
 ------
 
