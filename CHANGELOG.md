@@ -4,6 +4,11 @@ Changelog
 **Unreleased**
 --------------
 
+0.7.0
+------
+
+_2025-10-17_
+
 ### Dynamic Graphs
 
 Dynamic graphs are a powerful new feature of the Metro compiler that allows for dynamically replacing bindings in a given graph. To use them, you can pass in a vararg set of _binding containers_ to the `createDynamicGraph()` and `createDynamicGraphFactory()` intrinsics.
@@ -82,7 +87,7 @@ class TacoImpl(...) : Taco
 - Change the warning key for redundant provides to more specific `REDUNDANT_PROVIDES`.
 
 0.6.10
------
+------
 
 _2025-10-11_
 
