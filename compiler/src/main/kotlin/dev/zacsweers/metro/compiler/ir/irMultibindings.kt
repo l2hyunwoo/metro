@@ -6,7 +6,6 @@ import dev.zacsweers.metro.compiler.MetroAnnotations
 import dev.zacsweers.metro.compiler.expectAsOrNull
 import dev.zacsweers.metro.compiler.reportCompilerBug
 import java.util.Objects
-import org.jetbrains.kotlin.backend.jvm.codegen.AnnotationCodegen.Companion.annotationClass
 import org.jetbrains.kotlin.ir.builders.irString
 import org.jetbrains.kotlin.ir.declarations.IrOverridableDeclaration
 import org.jetbrains.kotlin.ir.declarations.IrProperty
@@ -89,7 +88,7 @@ internal val IrTypeKey.multibindingId: String
   get() = render(short = false, includeQualifier = true)
 
 internal fun createMapBindingId(mapKey: IrType, elementTypeKey: IrTypeKey): String {
-  return "${mapKey.render()}_${elementTypeKey.multibindingId}"
+  return "${mapKey.render(short = false)}_${elementTypeKey.multibindingId}"
 }
 
 context(context: IrMetroContext)

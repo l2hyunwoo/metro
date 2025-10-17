@@ -3,9 +3,9 @@
 package dev.zacsweers.metro.compiler;
 
 import com.intellij.testFramework.TestDataPath;
+import org.jetbrains.kotlin.test.util.KtTestUtil;
 import org.jetbrains.kotlin.test.TargetBackend;
 import org.jetbrains.kotlin.test.TestMetadata;
-import org.jetbrains.kotlin.test.util.KtTestUtil;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -127,6 +127,12 @@ public class IrDumpTestGenerated extends AbstractIrDumpTest {
     @TestMetadata("InitsAreChunked.kt")
     public void testInitsAreChunked() {
       runTest("compiler-tests/src/test/data/dump/ir/dependencygraph/InitsAreChunked.kt");
+    }
+
+    @Test
+    @TestMetadata("LazyPropertiesHaveDeterministicOrder.kt")
+    public void testLazyPropertiesHaveDeterministicOrder() {
+      runTest("compiler-tests/src/test/data/dump/ir/dependencygraph/LazyPropertiesHaveDeterministicOrder.kt");
     }
 
     @Test
