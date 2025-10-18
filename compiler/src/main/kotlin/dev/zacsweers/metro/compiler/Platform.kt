@@ -2,6 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 package dev.zacsweers.metro.compiler
 
+import dev.zacsweers.metro.compiler.validators.CommonIdentifierValidator
+import dev.zacsweers.metro.compiler.validators.JsIdentifierValidator
+import dev.zacsweers.metro.compiler.validators.JvmIdentifierValidator
+import dev.zacsweers.metro.compiler.validators.NativeIdentifierValidator
+
 /**
  * Specifies the target platform for identifier validation in [NameAllocator].
  *
@@ -91,8 +96,8 @@ internal enum class Platform {
  * @return Platform-specific validator instance
  */
 internal fun Platform.createValidator(): IdentifierValidator = when (this) {
-  Platform.JVM -> dev.zacsweers.metro.compiler.validators.JvmIdentifierValidator
-  Platform.JS -> dev.zacsweers.metro.compiler.validators.JsIdentifierValidator
-  Platform.NATIVE -> dev.zacsweers.metro.compiler.validators.NativeIdentifierValidator
-  Platform.COMMON -> dev.zacsweers.metro.compiler.validators.CommonIdentifierValidator
+  Platform.JVM -> JvmIdentifierValidator
+  Platform.JS -> JsIdentifierValidator
+  Platform.NATIVE -> NativeIdentifierValidator
+  Platform.COMMON -> CommonIdentifierValidator
 }
