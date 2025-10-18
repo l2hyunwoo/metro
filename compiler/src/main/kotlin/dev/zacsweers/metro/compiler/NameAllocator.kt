@@ -17,10 +17,9 @@
 
 package dev.zacsweers.metro.compiler
 
+import org.jetbrains.kotlin.renderer.KeywordStringsGenerated.KEYWORDS
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.renderer.KeywordStringsGenerated.KEYWORDS
 
 /**
  * Assigns Kotlin identifier names to avoid collisions, keywords, and invalid characters. To use,
@@ -83,6 +82,7 @@ private constructor(
   private val allocatedNames: MutableSet<String>,
   private val tagToName: MutableMap<Any, String>,
   private val mode: Mode,
+  private val validator: IdentifierValidator,
 ) {
   /**
    * @param preallocateKeywords If true, all Kotlin keywords will be preallocated. Requested names
@@ -108,14 +108,41 @@ private constructor(
    *
    * The default behaviour of [NameAllocator] is to preallocate keywords - this is the behaviour
    * you'll get when using the no-arg constructor.
+   *
+   * @param mode The collision resolution mode to use. [Mode.UNDERSCORE] appends underscores to
+   *   conflicting names, while [Mode.COUNT] appends a numeric suffix.
+   *
+   * @param platform The target platform for name validation. Determines which platform-specific
+   *   keywords and identifier rules to apply:
+   *   - [Platform.JVM]: Java identifier rules (allows Unicode, blocks dangerous chars like `.`, `;`)
+   *   - [Platform.JS]: JavaScript/ECMAScript 5.1 rules (allows Unicode, `$`, blocks JS keywords)
+   *   - [Platform.NATIVE]: C99/Objective-C rules (ASCII-only, blocks C and Objective-C keywords)
+   *   - [Platform.COMMON]: Conservative union of all platform restrictions (ASCII-only, blocks all
+   *     platform keywords). This is the default and ensures generated names work on all platforms.
+   *
+   * ```kotlin
+   * // Default: conservative cross-platform validation
+   * val nameAllocator = NameAllocator()
+   * println(nameAllocator.newName("int")) // prints "int_" (C keyword blocked)
+   *
+   * // JVM-specific: allows "int" since it's not a Java keyword
+   * val jvmAllocator = NameAllocator(platform = Platform.JVM)
+   * println(jvmAllocator.newName("int")) // prints "int"
+   *
+   * // JS-specific: allows "$jquery" syntax
+   * val jsAllocator = NameAllocator(platform = Platform.JS)
+   * println(jsAllocator.newName("$myVar")) // prints "$myVar"
+   * ```
    */
   constructor(
     preallocateKeywords: Boolean = true,
     mode: Mode = Mode.UNDERSCORE,
+    platform: Platform = Platform.COMMON,
   ) : this(
     allocatedNames = if (preallocateKeywords) KEYWORDS.toMutableSet() else mutableSetOf(),
     tagToName = mutableMapOf(),
     mode = mode,
+    validator = platform.createValidator(),
   )
 
   /**
@@ -124,7 +151,7 @@ private constructor(
    * [NameAllocator.get].
    */
   fun newName(suggestion: String, tag: Any = Uuid.random().toString()): String {
-    val cleanedSuggestion = toJavaIdentifier(suggestion)
+    val cleanedSuggestion = validator.sanitize(suggestion)
     val result = buildString {
       append(cleanedSuggestion)
       var count = 1
@@ -159,38 +186,11 @@ private constructor(
    * @return A deep copy of this NameAllocator.
    */
   fun copy(): NameAllocator {
-    return NameAllocator(allocatedNames.toMutableSet(), tagToName.toMutableMap(), mode = mode)
+    return NameAllocator(allocatedNames.toMutableSet(), tagToName.toMutableMap(), mode = mode, validator = validator)
   }
 
   internal enum class Mode {
     UNDERSCORE,
     COUNT,
   }
-}
-
-internal fun toJavaIdentifier(suggestion: String) = buildString {
-  var i = 0
-  while (i < suggestion.length) {
-    val codePoint = suggestion.codePointAt(i)
-    if (
-      i == 0 &&
-        !Character.isJavaIdentifierStart(codePoint) &&
-        Character.isJavaIdentifierPart(codePoint)
-    ) {
-      append("_")
-    }
-
-    val validCodePoint: Int =
-      if (Character.isJavaIdentifierPart(codePoint)) {
-        codePoint
-      } else {
-        '_'.code
-      }
-    appendCodePoint(validCodePoint)
-    i += Character.charCount(codePoint)
-  }
-}
-
-internal fun NameAllocator.newName(suggestion: Name, tag: Any = Uuid.random().toString()): Name {
-  return newName(suggestion.asString(), tag).asName()
 }
