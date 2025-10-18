@@ -199,6 +199,7 @@ internal class InjectedClassFirGenerator(session: FirSession, compatContext: Com
         val injectedMembersParameters: List<MetroFirValueParameter>
             get() = injectedMembersParamsByMemberKey.values.flatten()
 
+        // TODO dedupe keys?
         val allParameters: List<MetroFirValueParameter>
             get() = buildList {
                 addAll(constructorParameters)
