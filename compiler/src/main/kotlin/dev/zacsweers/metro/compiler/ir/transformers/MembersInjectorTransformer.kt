@@ -7,6 +7,7 @@ import dev.zacsweers.metro.compiler.Origins
 import dev.zacsweers.metro.compiler.Symbols
 import dev.zacsweers.metro.compiler.capitalizeUS
 import dev.zacsweers.metro.compiler.decapitalizeUS
+import dev.zacsweers.metro.compiler.detectPlatform
 import dev.zacsweers.metro.compiler.exitProcessing
 import dev.zacsweers.metro.compiler.fir.MetroDiagnostics
 import dev.zacsweers.metro.compiler.ir.IrMetroContext
@@ -452,7 +453,10 @@ internal class MembersInjectorTransformer(context: IrMetroContext) : IrMetroCont
     membersExtractor: (IrClass, ClassId, NameAllocator) -> List<Parameters>,
   ): Map<ClassId, List<Parameters>> {
     return buildList {
-        val nameAllocator = NameAllocator(mode = NameAllocator.Mode.COUNT)
+        val nameAllocator = NameAllocator(
+          mode = NameAllocator.Mode.COUNT,
+          platform = detectPlatform(),
+        )
 
         for (clazz in types) {
           val classId = clazz.classIdOrFail

@@ -7,6 +7,7 @@ import dev.zacsweers.metro.compiler.NameAllocator
 import dev.zacsweers.metro.compiler.Origins
 import dev.zacsweers.metro.compiler.asName
 import dev.zacsweers.metro.compiler.decapitalizeUS
+import dev.zacsweers.metro.compiler.detectPlatform
 import dev.zacsweers.metro.compiler.expectAs
 import dev.zacsweers.metro.compiler.ir.parameters.parameters
 import dev.zacsweers.metro.compiler.ir.parameters.wrapInProvider
@@ -80,7 +81,10 @@ internal class IrGraphGenerator(
 ) : IrMetroContext by metroContext {
 
   private var _functionNameAllocatorInitialized = false
-  private val _functionNameAllocator = NameAllocator(mode = NameAllocator.Mode.COUNT)
+  private val _functionNameAllocator = NameAllocator(
+    mode = NameAllocator.Mode.COUNT,
+    platform = metroContext.detectPlatform(),
+  )
   private val functionNameAllocator: NameAllocator
     get() {
       if (!_functionNameAllocatorInitialized) {

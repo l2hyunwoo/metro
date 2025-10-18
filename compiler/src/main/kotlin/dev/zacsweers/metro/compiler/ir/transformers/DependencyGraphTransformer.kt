@@ -7,6 +7,7 @@ import dev.zacsweers.metro.compiler.MetroLogger
 import dev.zacsweers.metro.compiler.NameAllocator
 import dev.zacsweers.metro.compiler.Origins
 import dev.zacsweers.metro.compiler.Symbols
+import dev.zacsweers.metro.compiler.detectPlatform
 import dev.zacsweers.metro.compiler.exitProcessing
 import dev.zacsweers.metro.compiler.expectAs
 import dev.zacsweers.metro.compiler.expectAsOrNull
@@ -290,7 +291,10 @@ internal class DependencyGraphTransformer(
         node.sourceGraph.metroGraphOrFail,
       )
 
-    val propertyNameAllocator = NameAllocator(mode = NameAllocator.Mode.COUNT)
+    val propertyNameAllocator = NameAllocator(
+      mode = NameAllocator.Mode.COUNT,
+      platform = detectPlatform(),
+    )
 
     // Preallocate any existing property and field names in this graph
     for (property in node.metroGraphOrFail.properties) {
