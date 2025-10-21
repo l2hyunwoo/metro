@@ -8,6 +8,7 @@ import dev.zacsweers.metro.compiler.fir.MetroDiagnostics
 import dev.zacsweers.metro.compiler.fir.annotationsIn
 import dev.zacsweers.metro.compiler.fir.classIds
 import dev.zacsweers.metro.compiler.fir.findInjectConstructor
+import dev.zacsweers.metro.compiler.fir.isAnnotatedWithAny
 import dev.zacsweers.metro.compiler.fir.validateInjectedClass
 import dev.zacsweers.metro.compiler.fir.validateInjectionSiteType
 import dev.zacsweers.metro.compiler.metroAnnotations
@@ -63,7 +64,14 @@ internal object InjectConstructorChecker : FirClassChecker(MppCheckerKind.Common
       )
     }
 
-    declaration.validateInjectedClass(context, reporter, classInjectAnnotations)
+    // Assisted factories can be annotated with @Contributes* annotations and fall through here
+    // While they're implicitly injectable lookups, they aren't beholden to the same injection
+    // requirements
+    val isAssistedFactory =
+      declaration.isAnnotatedWithAny(session, classIds.assistedFactoryAnnotations)
+    if (!isAssistedFactory) {
+      declaration.validateInjectedClass(context, reporter, classInjectAnnotations)
+    }
 
     val constructorToValidate =
       injectedConstructor?.constructor ?: declaration.primaryConstructorIfAny(session) ?: return
