@@ -4,6 +4,11 @@ Changelog
 **Unreleased**
 --------------
 
+0.7.1
+-----
+
+_2025-10-21_
+
 - **New**: Add missing dependency hints for missing bindings errors
     ```
     [Metro/MissingBinding] Cannot find an @Inject constructor or @Provides-annotated function/property for: FooImpl
@@ -33,8 +38,10 @@ Changelog
 - **Fix**: Align unused context parameter special names on Kotlin 2.3.x.
 - Remove `2.3.0-dev-7984` compat (superseded by `2.3.0-Beta1`).
 
+Special thanks to [@Lavmee](https://github.com/Lavmee), [@kevinguitar](https://github.com/kevinguitar), and [@jackwilsdon](https://github.com/jackwilsdon) for contributing to this release!
+
 0.7.0
-------
+-----
 
 _2025-10-17_
 
