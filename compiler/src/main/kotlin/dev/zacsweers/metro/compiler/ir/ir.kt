@@ -3,7 +3,6 @@
 package dev.zacsweers.metro.compiler.ir
 
 import dev.zacsweers.metro.compiler.MetroAnnotations
-import dev.zacsweers.metro.compiler.MetroOptions
 import dev.zacsweers.metro.compiler.Symbols
 import dev.zacsweers.metro.compiler.Symbols.DaggerSymbols
 import dev.zacsweers.metro.compiler.compat.CompatContext
@@ -184,14 +183,11 @@ internal fun IrElement?.locationIn(file: IrFile): CompilerMessageSourceLocation 
   )!!
 }
 
-internal fun CompilerMessageSourceLocation.render(): String? {
+internal fun CompilerMessageSourceLocation.render(short: Boolean): String? {
   return buildString {
     // Just for use in testing
-    val useShortName =
-      System.getProperty(MetroOptions.Properties.USE_SHORT_COMPILER_SOURCE_LOCATIONS, "false")
-        .toBoolean()
     val path = File(path).toPath()
-    if (useShortName) {
+    if (short) {
       append(path.name)
     } else {
       val fileUri = path.toUri()
@@ -206,7 +202,6 @@ internal fun CompilerMessageSourceLocation.render(): String? {
       // No line or column numbers makes this kind of useless so return null
       return null
     }
-    append(' ')
   }
 }
 

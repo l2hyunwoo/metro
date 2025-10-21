@@ -72,8 +72,8 @@ abstract class MetroCompilerTest {
       sources = sourceFiles.asList()
       verbose = false
       jvmTarget = JVM_TARGET
-      kotlincArguments += "-jvm-default=no-compatibility"
-      kotlincArguments += listOf("-Xverify-ir=error", "-Xverify-ir-visibility")
+      kotlincArguments +=
+        listOf("-jvm-default=no-compatibility", "-Xverify-ir=error", "-Xverify-ir-visibility")
 
       // TODO test enabling IC?
       //  kotlincArguments += "-Xenable-incremental-compilation"
