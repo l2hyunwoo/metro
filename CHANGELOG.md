@@ -17,7 +17,7 @@ _2025-10-22_
 
 _2025-10-21_
 
-**This release has a severe bug in multibinding code gen, please use 0.7.2 instead!**
+**🚨 This release has a severe bug in multibinding code gen, please use 0.7.2 instead!**
 
 - **New**: Add missing dependency hints for missing bindings errors
     ```
