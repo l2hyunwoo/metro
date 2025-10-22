@@ -4,6 +4,11 @@ Changelog
 **Unreleased**
 --------------
 
+0.7.2
+-----
+
+_2025-10-22_
+
 - **Fix**: Fix eager initialization of some bindings going into multibindings.
 - **Fix**: Fix injection of `Lazy`-wrapped multibindings.
 
@@ -11,6 +16,8 @@ Changelog
 -----
 
 _2025-10-21_
+
+**This release has a severe bug in multibinding code gen, please use 0.7.2 instead!**
 
 - **New**: Add missing dependency hints for missing bindings errors
     ```
