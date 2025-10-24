@@ -411,10 +411,7 @@ internal class MembersInjectorTransformer(context: IrMetroContext) : IrMetroCont
                         it.backingField?.isAnnotatedWithAny(metroSymbols.injectAnnotations) == true)
                   },
                 )
-                .map {
-                  // TODO support fields
-                  it.ir.memberInjectParameters(nameAllocator, clazz)
-                }
+                .map { it.ir.memberInjectParameters(nameAllocator, clazz) }
                 // Stable sort properties first
                 // TODO this implicit ordering requirement is brittle
                 .sortedBy { !it.isProperty }
