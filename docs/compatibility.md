@@ -2,7 +2,7 @@
 
 The Kotlin compiler plugin API is not a stable API, so not every version of Metro will work with every version of the Kotlin compiler.
 
-Starting with Metro `0.6.9`, Metro tries to support forward compatibility on a best-effort basis. Some releases may introduce prohibitively difficult breaking changes that require companion release, so check Metro's open PRs for one targeting that Kotlin version for details.
+Starting with Metro `0.6.9`, Metro tries to support forward compatibility on a best-effort basis. Usually, it's `N+.2` (so a Metro version built against Kotlin `2.3.0` will try to support up to `2.3.20`) Some releases may introduce prohibitively difficult breaking changes that require companion release, so check Metro's open PRs for one targeting that Kotlin version for details. There is a tested versions table at the bottom of this page that is updated with each Metro release.
 
 | Kotlin version | Metro versions (inclusive) |
 |----------------|----------------------------|
@@ -27,5 +27,6 @@ The following Kotlin versions are tested via CI:
 | 2.2.21         |
 | 2.2.20         |
 
-> **Note:** Versions without dedicated compiler-compat modules will use the nearest available implementation. See `compiler-compat/version-aliases.txt` for the full list.
+!!! note
+    Versions without dedicated compiler-compat modules will use the nearest available implementation _below_ that version. See [`compiler-compat/version-aliases.txt`](https://github.com/ZacSweers/metro/blob/main/compiler-compat/version-aliases.txt) for the full list.
 

@@ -59,7 +59,8 @@ done
 
 tested_section="$tested_section
 
-> **Note:** Versions without dedicated compiler-compat modules will use the nearest available implementation. See \`compiler-compat/version-aliases.txt\` for the full list.
+!!! note
+    Versions without dedicated compiler-compat modules will use the nearest available implementation _below_ that version. See [\`compiler-compat/version-aliases.txt\`](https://github.com/ZacSweers/metro/blob/main/compiler-compat/version-aliases.txt) for the full list.
 "
 
 # Create temporary files
