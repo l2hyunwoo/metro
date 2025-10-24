@@ -21,7 +21,7 @@ import dev.zacsweers.metro.compiler.mapToSet
 import dev.zacsweers.metro.compiler.metroAnnotations
 import dev.zacsweers.metro.compiler.reportCompilerBug
 import dev.zacsweers.metro.compiler.singleOrError
-import dev.zacsweers.metro.compiler.toJavaIdentifier
+import dev.zacsweers.metro.compiler.toSafeIdentifier
 import java.io.File
 import java.util.Objects
 import kotlin.io.path.name
@@ -625,7 +625,7 @@ internal fun assignConstructorParamsToFields(
       val irField =
         clazz
           .addField(
-            toJavaIdentifier(irParameter.name.asString()),
+            toSafeIdentifier(irParameter.name.asString()),
             irParameter.type,
             DescriptorVisibilities.PRIVATE,
           )

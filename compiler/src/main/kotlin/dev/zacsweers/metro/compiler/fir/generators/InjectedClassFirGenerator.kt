@@ -169,7 +169,9 @@ internal class InjectedClassFirGenerator(session: FirSession, compatContext: Com
     val isAssistedInject: Boolean,
   ) {
     private val parameterNameAllocator = NameAllocator()
-    private val memberNameAllocator = NameAllocator(mode = NameAllocator.Mode.COUNT)
+    // Don't preallocate as these are always prefixed later with "inject"
+    private val memberKeyAllocator =
+      NameAllocator(preallocateKeywords = false, mode = NameAllocator.Mode.COUNT)
     private var declaredInjectedMembersPopulated = false
     private var ancestorInjectedMembersPopulated = false
 
@@ -272,14 +274,14 @@ internal class InjectedClassFirGenerator(session: FirSession, compatContext: Com
                     session = session,
                     symbol = setterParam,
                     name = parameterNameAllocator.newName(propertyName),
-                    memberKey = memberNameAllocator.newName(propertyName),
+                    memberKey = memberKeyAllocator.newName(propertyName),
                   )
                 } else if (fieldSymbol != null) {
                   MetroFirValueParameter(
                     session = session,
                     symbol = fieldSymbol,
                     name = parameterNameAllocator.newName(propertyName),
-                    memberKey = memberNameAllocator.newName(propertyName),
+                    memberKey = memberKeyAllocator.newName(propertyName),
                   )
                 } else {
                   return@forEach
@@ -288,7 +290,7 @@ internal class InjectedClassFirGenerator(session: FirSession, compatContext: Com
             }
             is FirNamedFunctionSymbol -> {
               val functionName = injectedMember.name
-              val memberKey = memberNameAllocator.newName(functionName)
+              val memberKey = memberKeyAllocator.newName(functionName)
               val params =
                 injectedMember.valueParameterSymbols.map {
                   MetroFirValueParameter(
