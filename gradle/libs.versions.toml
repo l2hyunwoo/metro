@@ -82,6 +82,7 @@ androidx-work = "androidx.work:work-runtime:2.11.0"
 
 anvil-annotations = { module = "dev.zacsweers.anvil:annotations", version.ref = "anvil" }
 anvil-annotations-optional = { module = "dev.zacsweers.anvil:annotations-optional", version.ref = "anvil" }
+anvil-kspCompiler = { module = "dev.zacsweers.anvil:compiler", version.ref = "anvil" }
 
 autoService = { module = "com.google.auto.service:auto-service-annotations", version.ref = "autoService" }
 autoService-ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version = "1.2.0" }
