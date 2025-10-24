@@ -5,15 +5,96 @@
 
 set -euo pipefail
 
-if [ $# -ne 1 ]; then
-    echo "Usage: $0 <kotlin-version>"
-    echo "Example: $0 2.3.0-dev-9673"
-    echo "Example: $0 2.4.0-Beta1"
-    echo "Example: $0 2.3.20"
+# Ensure script is run from project root
+if [ ! -f "settings.gradle.kts" ] || [ ! -d "compiler-compat" ]; then
+    echo "❌ Error: This script must be run from the project root directory"
+    echo "Example: ./compiler-compat/generate-compat-module.sh 2.3.0"
     exit 1
 fi
 
-KOTLIN_VERSION="$1"
+# Parse arguments
+VERSION_ONLY=false
+KOTLIN_VERSION=""
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --version-only)
+            VERSION_ONLY=true
+            shift
+            ;;
+        -*)
+            echo "Unknown option: $1"
+            echo "Usage: $0 [--version-only] <kotlin-version>"
+            echo ""
+            echo "Options:"
+            echo "  --version-only    Only add version to version-aliases.txt (don't generate module)"
+            echo ""
+            echo "Examples:"
+            echo "  $0 2.3.0-dev-9673              # Generate full module"
+            echo "  $0 --version-only 2.3.21       # Only add to version-aliases.txt"
+            exit 1
+            ;;
+        *)
+            if [ -z "$KOTLIN_VERSION" ]; then
+                KOTLIN_VERSION="$1"
+            else
+                echo "Error: Multiple versions specified"
+                exit 1
+            fi
+            shift
+            ;;
+    esac
+done
+
+if [ -z "$KOTLIN_VERSION" ]; then
+    echo "Error: No Kotlin version specified"
+    echo "Usage: $0 [--version-only] <kotlin-version>"
+    echo ""
+    echo "Options:"
+    echo "  --version-only    Only add version to version-aliases.txt (don't generate module)"
+    echo ""
+    echo "Examples:"
+    echo "  $0 2.3.0-dev-9673              # Generate full module"
+    echo "  $0 --version-only 2.3.21       # Only add to version-aliases.txt"
+    exit 1
+fi
+
+# Function to add version to version-aliases.txt
+add_to_version_aliases() {
+    local version="$1"
+    local aliases_file="compiler-compat/version-aliases.txt"
+
+    # Check if version already exists
+    if grep -Fxq "$version" "$aliases_file" 2>/dev/null; then
+        echo "⚠️  Version $version already exists in $aliases_file"
+        return 0
+    fi
+
+    # Add version to the file (maintain sorted order)
+    echo "$version" >> "$aliases_file"
+
+    # Re-sort the file (keeping header comments at the top)
+    local tmpfile=$(mktemp)
+    # Extract header (all lines until first non-comment/non-blank line)
+    awk '/^[^#]/ && NF {exit} {print}' "$aliases_file" > "$tmpfile"
+    # Extract and sort versions
+    grep -v '^#' "$aliases_file" | grep -v '^[[:space:]]*$' | sort >> "$tmpfile"
+    mv "$tmpfile" "$aliases_file"
+
+    echo "✅ Added $version to $aliases_file"
+}
+
+# If --version-only, just add to version-aliases.txt and exit
+if [ "$VERSION_ONLY" = true ]; then
+    echo "Adding version $KOTLIN_VERSION to version-aliases.txt (--version-only mode)"
+    add_to_version_aliases "$KOTLIN_VERSION"
+    echo ""
+    echo "✅ Done! Version added to version-aliases.txt"
+    echo ""
+    echo "Note: This version will use the implementation from its nearest module."
+    echo "If you need a new implementation, run without --version-only flag."
+    exit 0
+fi
 
 # Transform version to valid package name
 # 1. Remove dots
@@ -81,6 +162,9 @@ cat > "$MODULE_DIR/src/main/resources/META-INF/services/dev.zacsweers.metro.comp
 dev.zacsweers.metro.compiler.compat.$MODULE_NAME.CompatContextImpl\$Factory
 EOF
 
+# Add version to version-aliases.txt
+add_to_version_aliases "$KOTLIN_VERSION"
+
 echo ""
 echo "✅ Generated module structure:"
 echo "  📁 $MODULE_DIR/"
@@ -90,8 +174,9 @@ echo "  📄 $MODULE_DIR/gradle.properties"
 echo "  📄 $MODULE_DIR/src/main/kotlin/dev/zacsweers/metro/compiler/compat/$MODULE_NAME/CompatContextImpl.kt"
 echo "  📄 $MODULE_DIR/src/main/resources/META-INF/services/dev.zacsweers.metro.compiler.compat.CompatContext\$Factory"
 echo ""
-echo "✅ Updated build configuration:"
-echo "  📝 Added module to settings.gradle.kts"
-echo "  📝 Added dependency to compiler/build.gradle.kts"
+echo "✅ Updated configuration:"
+echo "  📝 Added module to settings.gradle.kts (auto-discovered)"
+echo "  📝 Added dependency to compiler/build.gradle.kts (auto-discovered)"
+echo "  📝 Added $KOTLIN_VERSION to compiler-compat/version-aliases.txt"
 echo ""
 echo "Next step: Implement the CompatContextImpl.kt based on Kotlin $KOTLIN_VERSION APIs"
