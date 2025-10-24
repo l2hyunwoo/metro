@@ -27,11 +27,11 @@ while [[ $# -gt 0 ]]; do
             echo "Usage: $0 [--version-only] <kotlin-version>"
             echo ""
             echo "Options:"
-            echo "  --version-only    Only add version to version-aliases.txt (don't generate module)"
+            echo "  --version-only    Add version to version-aliases.txt for CI support (no module generation)"
             echo ""
             echo "Examples:"
             echo "  $0 2.3.0-dev-9673              # Generate full module"
-            echo "  $0 --version-only 2.3.21       # Only add to version-aliases.txt"
+            echo "  $0 --version-only 2.3.21       # Add CI-supported version alias only"
             exit 1
             ;;
         *)
@@ -51,11 +51,11 @@ if [ -z "$KOTLIN_VERSION" ]; then
     echo "Usage: $0 [--version-only] <kotlin-version>"
     echo ""
     echo "Options:"
-    echo "  --version-only    Only add version to version-aliases.txt (don't generate module)"
+    echo "  --version-only    Add version to version-aliases.txt for CI support (no module generation)"
     echo ""
     echo "Examples:"
     echo "  $0 2.3.0-dev-9673              # Generate full module"
-    echo "  $0 --version-only 2.3.21       # Only add to version-aliases.txt"
+    echo "  $0 --version-only 2.3.21       # Add CI-supported version alias only"
     exit 1
 fi
 
@@ -89,10 +89,10 @@ if [ "$VERSION_ONLY" = true ]; then
     echo "Adding version $KOTLIN_VERSION to version-aliases.txt (--version-only mode)"
     add_to_version_aliases "$KOTLIN_VERSION"
     echo ""
-    echo "✅ Done! Version added to version-aliases.txt"
+    echo "✅ Done! Version added to version-aliases.txt for CI support"
     echo ""
-    echo "Note: This version will use the implementation from its nearest module."
-    echo "If you need a new implementation, run without --version-only flag."
+    echo "Note: This version will use the nearest available module implementation."
+    echo "To generate a dedicated module implementation, run without --version-only flag."
     exit 0
 fi
 
